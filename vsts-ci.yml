@@ -4,26 +4,31 @@ queue:
 
 steps:
 - task: InstallAppleCertificate@1
+  displayName: "Install Apple certificate"
   inputs:
     certSecureFile: "f1170e51-3d6f-42b2-aae2-d02137281714"
     certPwd: "$(P12password)"
 
 - task: InstallAppleProvisioningProfile@1
+  displayName: "Install Apple provisioning profile"
   inputs:
     provProfileSecureFile: "851af618-cea8-4d5e-ac80-d77132059519"
 
 - task: Xcode@4
+  displayName: "Xcode build"
   inputs:
     xcWorkspacePath: "xcode7ObjectiveC/xcode7ObjectiveC.xcodeproj/project.xcworkspace"
     outputPattern: "$(agent.builddirectory)/output/$(SDK)/$(Configuration)"
 
 - task: CopyFiles@2
+  displayName: "Copy artifacts to staging"
   inputs:
-    SourceFolder: "$(agent.builddirectory)/output/$(SDK)/$(Configuration)"
-    Contents: "**/*.app"
+    SourceFolder: "$(agent.builddirectory)/output"
+    Contents: "**/xcode7ObjectiveC.app/*"
     TargetFolder: "$(build.artifactstagingdirectory)"
 
 - task: PublishBuildArtifacts@1
+  displayName: "Publish artifacts"
   inputs:
     PathtoPublish: "$(build.artifactstagingdirectory)"
     ArtifactName: "drop"
