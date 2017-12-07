@@ -20,7 +20,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: "$(agent.builddirectory)/output/$(SDK)/$(Configuration)"
-    Contents: "**/*.ipa"
+    Contents: "**/*.app"
     TargetFolder: "$(build.artifactstagingdirectory)"
 
 - task: PublishBuildArtifacts@1
