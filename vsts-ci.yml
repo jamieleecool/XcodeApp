@@ -1,0 +1,30 @@
+queue:
+  name: Hosted macOS Preview
+  demands: xcode
+
+steps:
+- task: InstallAppleCertificate@1
+  inputs:
+    certSecureFile: "f1170e51-3d6f-42b2-aae2-d02137281714"
+    certPwd: "$(P12password)"
+
+- task: InstallAppleProvisioningProfile@1
+  inputs:
+    provProfileSecureFile: "851af618-cea8-4d5e-ac80-d77132059519"
+
+- task: Xcode@4
+  inputs:
+    xcWorkspacePath: "xcode7ObjectiveC/xcode7ObjectiveC.xcodeproj/project.xcworkspace"
+    outputPattern: "$(agent.builddirectory)/output/$(SDK)/$(Configuration)"
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: "$(agent.builddirectory)/output/$(SDK)/$(Configuration)"
+    Contents: "**/*.ipa"
+    TargetFolder: "$(build.artifactstagingdirectory)"
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: "$(build.artifactstagingdirectory)"
+    ArtifactName: "drop"
+    ArtifactType: "Container"
